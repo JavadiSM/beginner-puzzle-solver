@@ -30,4 +30,4 @@ This repository aims to implement various search algorithms to solve the NP-hard
 ## Future Work
 - Implement additional search algorithms like A* and Greedy Best-First Search.
 - Benchmark and compare algorithm performance. (if I have time to)
-- Develop a graphical user interface (GUI). (I would be grateful if you are eager to cooperate)
+- Develop a graphical user interface (GUI). (I would be grateful if you are eager to help)
