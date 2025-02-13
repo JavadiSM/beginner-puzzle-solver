@@ -145,7 +145,7 @@ class Solver:
 def main():
     global size
     global correct_order
-    mode = input("dfs bfs or ids or ldfs ?copy paste\n").lower()
+    mode = input("dfs bfs or ids or ldfs ?\nldfs stands for limited depth search(limited dfs) and ids is iterative deepening search,\ncopy paste\n").lower()
     depth = 4
     if mode=="ldfs":
         depth = int(input("and depth?\n"))
