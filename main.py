@@ -45,7 +45,7 @@ class Solver:
         elif mode == "ldfs":
             res = Solver.limited_dfs(self.state,depth)
         elif mode == "ids":
-            res = Solver.limited_dfs(self.state)
+            res = Solver.ids(self.state)
         if res:
             out = []
             cur:Node = res
@@ -133,6 +133,12 @@ class Solver:
                 stk.extend(children)
         return None
         
+    def ids(state:State):
+        for i in range(1,+1_000_000_000):
+            res = Solver.limited_dfs(state,i)
+            if res:
+                return res
+        return None
         
 
 
