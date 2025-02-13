@@ -37,8 +37,15 @@ class Solver:
     def __init__(self,state):
         self.state:State = state
 
-    def solve(self):
-        res = Solver.bfs(self.state)
+    def solve(self,mode,depth=2):
+        if mode == "bfs":
+            res = Solver.bfs(self.state)
+        elif mode == "dfs":
+            res = Solver.dfs(self.state)
+        elif mode == "ldfs":
+            res = Solver.limited_dfs(self.state,depth)
+        elif mode == "ids":
+            res = Solver.limited_dfs(self.state)
         if res:
             out = []
             cur:Node = res
@@ -97,12 +104,45 @@ class Solver:
                 children = [Node(Solver.act(cur.state,action),cur) for action in acts]
                 queue.extend(children)
         return None
+    
+    def dfs(state:State):
+        stk = []
+        stk.append(Node(state,None))
+        while stk:
+            cur:Node = stk.pop()
+            if Solver.test_goal(cur.state):
+                return cur
+            else:
+                acts = Solver.actions(cur.state)
+                children = [Node(Solver.act(cur.state,action),cur) for action in acts]
+                stk.extend(children)
+        return None
+    
+    def limited_dfs(state:State,depth):
+        stk = []
+        stk.append((Node(state,None),0))
+        while stk:
+            cur,d = stk.pop()
+            if Solver.test_goal(cur.state):
+                return cur
+            elif d>=depth:
+                continue
+            else:
+                acts = Solver.actions(cur.state)
+                children = [(Node(Solver.act(cur.state,action),cur),d+1) for action in acts]
+                stk.extend(children)
+        return None
+        
         
 
 
 def main():
     global size
     global correct_order
+    mode = input("dfs bfs or ids or ldfs ?copy paste\n").lower()
+    depth = 4
+    if mode=="ldfs":
+        depth = int(input("and depth?\n"))
     size = int(input("size of grid?\n"))
     print("enter puzzle")
     for i in range(size):
@@ -113,7 +153,7 @@ def main():
     for _ in range(size):
         grid.append(list(map(int,input().split())))
     solver = Solver(State(grid))
-    print(solver.solve())
+    print(solver.solve(mode,depth))
 
 
 
