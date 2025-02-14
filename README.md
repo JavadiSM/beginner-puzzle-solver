@@ -25,7 +25,31 @@ This repository aims to implement various search algorithms to solve the NP-hard
    .\main.py
    ```
 
-4. Enter the size of the puzzle grid (e.g., 3 for a 3x3 grid) and the initial puzzle state.
+4. Enter your puzzle and method you wish the program ro solve. Notice this example for using it:
+dfs bfs or ids or ldfs ?
+ldfs stands for limited depth search(limited dfs) and ids is iterative deepening search,
+copy paste:
+ids
+size of grid?
+3
+enter puzzle
+1 2 3
+9 4 5
+7 8 6
+solution:
+
+
+1 2 3
+4 9 5
+7 8 6
+
+1 2 3
+4 5 9
+7 8 6
+
+1 2 3
+4 5 6
+7 8 9
 
 ## Future Work
 - Implement additional search algorithms like A* and Greedy Best-First Search.
