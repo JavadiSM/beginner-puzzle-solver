@@ -92,6 +92,20 @@ class Solver:
             a.extend(row)
         return a==correct_order
     
+    def heuristic_manhatan1(state):
+        a = []
+        for row in state.grid:
+            a.extend(row)
+        res = 0
+        for i in range(size):
+            for j in range(size):
+                a = a[i * size + j] - (i * size + j + 1)
+                b = a if a>=0 else -a
+                res += b
+        return res
+
+
+
     def bfs(state:State):
         queue = []
         queue.append(Node(state,None))
