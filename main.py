@@ -30,9 +30,10 @@ class State:
         self.moveCordiantes = moveCordiantes
 
 class Node:
-    def __init__(self,state,parent):
+    def __init__(self,state,parent,path = 1):
         self.state:State = state
-        self.parent:State = parent
+        self.parent:Node = parent
+        self.path = path
 class Solver:
     def __init__(self,state):
         self.state:State = state
@@ -46,6 +47,8 @@ class Solver:
             res = Solver.limited_dfs(self.state,depth)
         elif mode == "ids":
             res = Solver.ids(self.state)
+        elif mode == "gbs":
+            res = Solver.greedy_first_search(self.state)
         if res:
             out = []
             cur:Node = res
@@ -92,15 +95,17 @@ class Solver:
             a.extend(row)
         return a==correct_order
     
-    def heuristic_manhatan1(state):
+    def heuristic_manhatan1(state:State):
+        if not state:
+            return 1_000_000_000
         a = []
         for row in state.grid:
             a.extend(row)
         res = 0
         for i in range(size):
             for j in range(size):
-                a = a[i * size + j] - (i * size + j + 1)
-                b = a if a>=0 else -a
+                a[i * size + j] = a[i * size + j] - (i * size + j + 1)
+                b = a[i * size + j] if a[i * size + j]>=0 else -a[i * size + j]
                 res += b
         return res
 
@@ -154,12 +159,26 @@ class Solver:
                 return res
         return None
         
+    def greedy_first_search(state:State):
+        ls = []
+        ls.append(Node(state,None,0))
+        while ls:
+            nd:Node = Node(None,None)
+            for node in ls:
+                if Solver.heuristic_manhatan1(node.state)<= Solver.heuristic_manhatan1(nd.state):
+                    nd = node
+            ls.remove(nd)
+            if Solver.test_goal(nd.state):
+                return nd
+            acts = Solver.actions(nd.state)
+            children = [Node(Solver.act(nd.state,act),nd,nd.path + 1) for act in acts]
+            ls.extend(children)
 
 
 def main():
     global size
     global correct_order
-    mode = input("dfs bfs or ids or ldfs ?\nldfs stands for limited depth search(limited dfs) and ids is iterative deepening search,\ncopy paste:\n").lower()
+    mode = input("choose one and copy paste\ndfs\nbfs\nids\nldfs\ngbs?\nldfs stands for limited depth search(limited dfs) and ids is iterative deepening search\ngbs is greedy best first search\n\n").lower().strip()
     depth = 4
     if mode=="ldfs":
         depth = int(input("and depth?\n"))
