@@ -39,6 +39,7 @@ class Solver:
         self.state:State = state
 
     def solve(self,mode,depth=2):
+        res = None
         if mode == "bfs":
             res = Solver.bfs(self.state)
         elif mode == "dfs":
@@ -49,6 +50,8 @@ class Solver:
             res = Solver.ids(self.state)
         elif mode == "gbs":
             res = Solver.greedy_first_search(self.state,Solver.heuristic_manhatan1)
+        elif mode == "A*":
+            res = Solver.Astar(self.state,Solver.heuristic_manhatan1)
         if res:
             out = []
             cur:Node = res
@@ -174,11 +177,28 @@ class Solver:
             children = [Node(Solver.act(nd.state,act),nd,nd.path + 1) for act in acts]
             ls.extend(children)
 
+    def Astar(state:State,heuristic:callable):
+        def h(node:Node):
+            return heuristic(node.state) + node.path
+        ls = []
+        ls.append(Node(state,None,0))
+        while ls:
+            nd:Node = Node(None,None)
+            for node in ls:
+                if h(node) <= h(nd):
+                    nd = node
+            ls.remove(nd)
+            if Solver.test_goal(nd.state):
+                return nd
+            acts = Solver.actions(nd.state)
+            children = [Node(Solver.act(nd.state,act),nd,nd.path + 1) for act in acts]
+            ls.extend(children)
+
 
 def main():
     global size
     global correct_order
-    mode = input("choose one and copy paste\ndfs\nbfs\nids\nldfs\ngbs?\nldfs stands for limited depth search(limited dfs) and ids is iterative deepening search\ngbs is greedy best first search\n\n").lower().strip()
+    mode = input("choose one and copy paste\ndfs\nbfs\nids\nldfs\ngbs\nA*\n?\nldfs stands for limited depth search(limited dfs) and ids is iterative deepening search\ngbs is greedy best first search\n\n").lower().strip()
     depth = 4
     if mode=="ldfs":
         depth = int(input("and depth?\n"))
