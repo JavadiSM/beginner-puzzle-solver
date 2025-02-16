@@ -48,7 +48,7 @@ class Solver:
         elif mode == "ids":
             res = Solver.ids(self.state)
         elif mode == "gbs":
-            res = Solver.greedy_first_search(self.state)
+            res = Solver.greedy_first_search(self.state,Solver.heuristic_manhatan1)
         if res:
             out = []
             cur:Node = res
@@ -159,13 +159,13 @@ class Solver:
                 return res
         return None
         
-    def greedy_first_search(state:State):
+    def greedy_first_search(state:State,heuristic:callable):
         ls = []
         ls.append(Node(state,None,0))
         while ls:
             nd:Node = Node(None,None)
             for node in ls:
-                if Solver.heuristic_manhatan1(node.state)<= Solver.heuristic_manhatan1(nd.state):
+                if heuristic(node.state)<= heuristic(nd.state):
                     nd = node
             ls.remove(nd)
             if Solver.test_goal(nd.state):
